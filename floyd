@@ -1,0 +1,63 @@
+#include <stdio.h>
+
+#define INF 99999  // A large value representing infinity
+
+// Function to print the solution matrix
+void printSolution(int dist[][100], int V) {
+    printf("The following matrix shows the shortest distances between every pair of vertices:\n");
+    for (int i = 0; i < V; i++) {
+        for (int j = 0; j < V; j++) {
+            if (dist[i][j] == INF)
+                printf("%7s", "INF");
+            else
+                printf("%7d", dist[i][j]);
+        }
+        printf("\n");
+    }
+}
+
+// Floyd-Warshall algorithm to find shortest paths
+void floydWarshall(int graph[][100], int V) {
+    int dist[100][100], i, j, k;
+
+    // Initialize the solution matrix with the input graph's weights
+    for (i = 0; i < V; i++)
+        for (j = 0; j < V; j++)
+            dist[i][j] = graph[i][j];
+
+    // Compute shortest paths using the Floyd-Warshall algorithm
+    for (k = 0; k < V; k++) {
+        for (i = 0; i < V; i++) {
+            for (j = 0; j < V; j++) {
+                if (dist[i][k] + dist[k][j] < dist[i][j])
+                    dist[i][j] = dist[i][k] + dist[k][j];
+            }
+        }
+    }
+
+    // Print the final shortest path matrix
+    printSolution(dist, V);
+}
+
+int main() {
+    int V;
+
+    // Prompt the user for the number of vertices
+    printf("Enter the number of vertices: ");
+    scanf("%d", &V);
+
+    int graph[100][100];
+
+    // Input the adjacency matrix for the graph
+    printf("Enter the adjacency matrix (use %d for infinity):\n", INF);
+    for (int i = 0; i < V; i++) {
+        for (int j = 0; j < V; j++) {
+            scanf("%d", &graph[i][j]);
+        }
+    }
+
+    // Run the Floyd-Warshall algorithm
+    floydWarshall(graph, V);
+
+    return 0;
+}
